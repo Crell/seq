@@ -19,8 +19,9 @@ func (e *NotParsableLine) Error() string {
 }
 
 type statement struct {
-	from participant
-	to   participant
+	from  participant
+	to    participant
+	label string
 }
 
 func Parse(r *bufio.Reader, out chan *statement) string {
@@ -51,10 +52,10 @@ func parseLine(text string) (*statement, error) {
 	switch {
 	case forwardArrow.MatchString(text):
 		matches := forwardArrow.FindStringSubmatch(text)
-		return &statement{from: participant(matches[1]), to: participant(matches[2])}, nil
+		return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}, nil
 	case backArrow.MatchString(text):
 		matches := backArrow.FindStringSubmatch(text)
-		return &statement{from: participant(matches[1]), to: participant(matches[2])}, nil
+		return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}, nil
 	}
 
 	return nil, &NotParsableLine{text: text}

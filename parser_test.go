@@ -21,6 +21,9 @@ func TestForwardArrow(t *testing.T) {
 	if x.to != "B" {
 		t.Error("To property incorrect")
 	}
+	if x.label != "Test" {
+		t.Error("Label incorrect")
+	}
 
 	x = <-c
 	if x.from != "C" {
@@ -28,6 +31,9 @@ func TestForwardArrow(t *testing.T) {
 	}
 	if x.to != "D" {
 		t.Error("To property incorrect")
+	}
+	if x.label != "More" {
+		t.Error("Label incorrect")
 	}
 
 }
@@ -49,6 +55,9 @@ func TestBackArrow(t *testing.T) {
 	if x.to != "B" {
 		t.Error("To property incorrect")
 	}
+	if x.label != "Test" {
+		t.Error("Label incorrect")
+	}
 
 	x = <-c
 	if x.from != "C" {
@@ -56,6 +65,9 @@ func TestBackArrow(t *testing.T) {
 	}
 	if x.to != "D" {
 		t.Error("To property incorrect")
+	}
+	if x.label != "More" {
+		t.Error("Label incorrect")
 	}
 
 }
