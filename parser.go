@@ -2,47 +2,56 @@ package seq
 
 import (
 	"bufio"
-	//	"io"
-	//	"bytes"
+	"fmt"
+	"regexp"
 )
 
-type statement struct {
-	from string
-	to   string
+var _ = fmt.Printf
+
+type participant string
+
+type NotParsableLine struct {
+	text string
 }
 
-func Parse(r *bufio.Reader, out chan string) string {
+func (e *NotParsableLine) Error() string {
+	return fmt.Sprintf("Could not parse text: %s", e.text)
+}
+
+type statement struct {
+	from participant
+	to   participant
+}
+
+func Parse(r *bufio.Reader, out chan *statement) string {
 
 	scanner := bufio.NewScanner(r)
 
 	go scan(scanner, out)
 
 	return "end"
-
-	//	lineBytes, _ := r.ReadSlice('\n')
-	//
-	//	if err != nil {
-	//		// Error handling?
-	//	}
-	//
-	//	//	n := bytes.Index(lineBytes, []byte{0})
-	//
-	//	line := string(lineBytes[:])
-
-	//return line
-	//
-	//	if err {
-	//		// Error handling?
-	//	}
-	//
-	//	fmt.Scanf(line, )
-	//
-
 }
 
-func scan(scanner *bufio.Scanner, out chan string) {
+func scan(scanner *bufio.Scanner, out chan *statement) {
 	for scanner.Scan() {
-		out <- scanner.Text()
+		text := scanner.Text()
+		stmt, err := parseLine(text)
+		if err == nil {
+			out <- stmt
+		}
+
+	}
+}
+
+func parseLine(text string) (*statement, error) {
+
+	forwardArrow, _ := regexp.Compile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
+
+	switch {
+	case forwardArrow.MatchString(text):
+		matches := forwardArrow.FindStringSubmatch(text)
+		return &statement{from: participant(matches[1]), to: participant(matches[2])}, nil
 	}
 
+	return nil, &NotParsableLine{text: text}
 }
