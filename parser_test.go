@@ -7,10 +7,10 @@ import "bufio"
 func TestForwardArrow(t *testing.T) {
 
 	s := bufio.NewReader(strings.NewReader("A -> B: Test\nC->D:More"))
-
 	c := make(chan *statement)
 
-	Parse(s, c)
+	p := NewParser(c)
+	p.Parse(s)
 
 	var x *statement
 
@@ -41,10 +41,10 @@ func TestForwardArrow(t *testing.T) {
 func TestBackArrow(t *testing.T) {
 
 	s := bufio.NewReader(strings.NewReader("A <- B: Test\nC<-D:More"))
-
 	c := make(chan *statement)
 
-	Parse(s, c)
+	p := NewParser(c)
+	p.Parse(s)
 
 	var x *statement
 
