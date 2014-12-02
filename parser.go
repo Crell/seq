@@ -46,8 +46,8 @@ func scan(scanner *bufio.Scanner, out chan *statement) {
 
 func parseLine(text string) (*statement, error) {
 
-	forwardArrow, _ := regexp.Compile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
-	backArrow, _ := regexp.Compile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
+	forwardArrow := regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
+	backArrow := regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
 
 	switch {
 	case forwardArrow.MatchString(text):
