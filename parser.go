@@ -36,41 +36,41 @@ type parseRule struct {
 	regex *regexp.Regexp
 }
 
-type forwardArrow struct {
+type forwardArrowRule struct {
 	parseRule
 }
 
-func NewForwardArrow() *forwardArrow {
-	o := &forwardArrow{}
+func NewForwardArrowRule() *forwardArrowRule {
+	o := &forwardArrowRule{}
 	o.regex = regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
 	return o
 }
 
-func (p *forwardArrow) action(text string) *statement {
+func (p *forwardArrowRule) action(text string) *statement {
 	matches := p.regex.FindStringSubmatch(text)
 	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
 }
 
-func (p *forwardArrow) matches(text string) bool {
+func (p *forwardArrowRule) matches(text string) bool {
 	return p.regex.MatchString(text)
 }
 
-type backArrow struct {
+type backArrowRule struct {
 	parseRule
 }
 
-func NewBackArrow() *backArrow {
-	o := &backArrow{}
+func NewBackArrowRule() *backArrowRule {
+	o := &backArrowRule{}
 	o.regex = regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
 	return o
 }
 
-func (p *backArrow) action(text string) *statement {
+func (p *backArrowRule) action(text string) *statement {
 	matches := p.regex.FindStringSubmatch(text)
 	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
 }
 
-func (p *backArrow) matches(text string) bool {
+func (p *backArrowRule) matches(text string) bool {
 	return p.regex.MatchString(text)
 }
 
@@ -82,8 +82,8 @@ type Parser struct {
 func NewParser(out chan *statement) *Parser {
 	p := &Parser{out: out}
 
-	p.addRule(NewForwardArrow())
-	p.addRule(NewBackArrow())
+	p.addRule(NewForwardArrowRule())
+	p.addRule(NewBackArrowRule())
 
 	return p
 }
