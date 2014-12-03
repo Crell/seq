@@ -67,7 +67,7 @@ func NewBackArrowRule() *backArrowRule {
 
 func (p *backArrowRule) action(text string) *statement {
 	matches := p.regex.FindStringSubmatch(text)
-	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
+	return &statement{from: participant(matches[2]), to: participant(matches[1]), label: matches[3]}
 }
 
 func (p *backArrowRule) matches(text string) bool {

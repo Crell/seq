@@ -49,10 +49,10 @@ func TestBackArrow(t *testing.T) {
 	var x *statement
 
 	x = <-c
-	if x.from != "A" {
+	if x.from != "B" {
 		t.Error("From property incorrect")
 	}
-	if x.to != "B" {
+	if x.to != "A" {
 		t.Error("To property incorrect")
 	}
 	if x.label != "Test" {
@@ -60,10 +60,10 @@ func TestBackArrow(t *testing.T) {
 	}
 
 	x = <-c
-	if x.from != "C" {
+	if x.from != "D" {
 		t.Error("From property incorrect")
 	}
-	if x.to != "D" {
+	if x.to != "C" {
 		t.Error("To property incorrect")
 	}
 	if x.label != "More" {
