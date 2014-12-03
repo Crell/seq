@@ -10,6 +10,8 @@ var _ = fmt.Printf
 
 type participant string
 
+// Error definitions
+
 type NotParsableLine struct {
 	text string
 }
@@ -24,23 +26,70 @@ type statement struct {
 	label string
 }
 
+type ruleParser interface {
+	action(text string) *statement
+	matches(text string) bool
+}
+
+// Base "class" for rule parsers.  Ish. Not really.
+type parseRule struct {
+	regex *regexp.Regexp
+}
+
+type forwardArrow struct {
+	parseRule
+}
+
+func NewForwardArrow() *forwardArrow {
+	o := &forwardArrow{}
+	o.regex = regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
+	return o
+}
+
+func (p *forwardArrow) action(text string) *statement {
+	matches := p.regex.FindStringSubmatch(text)
+	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
+}
+
+func (p *forwardArrow) matches(text string) bool {
+	return p.regex.MatchString(text)
+}
+
+type backArrow struct {
+	parseRule
+}
+
+func NewBackArrow() *backArrow {
+	o := &backArrow{}
+	o.regex = regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
+	return o
+}
+
+func (p *backArrow) action(text string) *statement {
+	matches := p.regex.FindStringSubmatch(text)
+	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
+}
+
+func (p *backArrow) matches(text string) bool {
+	return p.regex.MatchString(text)
+}
+
 type Parser struct {
-	out     chan *statement
-	rules   map[string]*regexp.Regexp
+	out   chan *statement
+	rules []ruleParser
 }
 
 func NewParser(out chan *statement) *Parser {
 	p := &Parser{out: out}
 
-	p.rules = map[string]*regexp.Regexp{
-		"forwardArrow": regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`),
-		"backArrow":    regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`),
-	}
-
-	//p.forwardArrow := regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
-	//p.backArrow := regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
+	p.addRule(NewForwardArrow())
+	p.addRule(NewBackArrow())
 
 	return p
+}
+
+func (p *Parser) addRule(rule ruleParser) {
+	p.rules = append(p.rules, rule)
 }
 
 func (p *Parser) Parse(inStream *bufio.Reader) {
@@ -57,17 +106,10 @@ func (p *Parser) Parse(inStream *bufio.Reader) {
 }
 
 func (p *Parser) parseLine(text string) (*statement, error) {
-
-	forwardArrow := regexp.MustCompile(`(\w+)\s*->\s*(\w+):\s*(\w+)`)
-	backArrow := regexp.MustCompile(`(\w+)\s*<-\s*(\w+):\s*(\w+)`)
-
-	switch {
-	case p.rules["forwardArrow"].MatchString(text):
-		matches := forwardArrow.FindStringSubmatch(text)
-		return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}, nil
-	case p.rules["backArrow"].MatchString(text):
-		matches := backArrow.FindStringSubmatch(text)
-		return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}, nil
+	for _, rule := range p.rules {
+		if rule.matches(text) {
+			return rule.action(text), nil
+		}
 	}
 
 	return nil, &NotParsableLine{text: text}
