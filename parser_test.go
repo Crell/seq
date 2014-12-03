@@ -35,7 +35,6 @@ func TestForwardArrow(t *testing.T) {
 	if x.label != "More" {
 		t.Error("Label incorrect")
 	}
-
 }
 
 func TestBackArrow(t *testing.T) {
@@ -69,5 +68,37 @@ func TestBackArrow(t *testing.T) {
 	if x.label != "More" {
 		t.Error("Label incorrect")
 	}
+}
 
+func TestLoopbackArrow(t *testing.T) {
+
+	s := bufio.NewReader(strings.NewReader("A->A: Test\nB->B:More"))
+	c := make(chan *statement)
+
+	p := NewParser(c)
+	p.Parse(s)
+
+	var x *statement
+
+	x = <-c
+	if x.from != "A" {
+		t.Error("From property incorrect")
+	}
+	if x.to != "A" {
+		t.Error("To property incorrect")
+	}
+	if x.label != "Test" {
+		t.Error("Label incorrect")
+	}
+
+	x = <-c
+	if x.from != "B" {
+		t.Error("From property incorrect")
+	}
+	if x.to != "B" {
+		t.Error("To property incorrect")
+	}
+	if x.label != "More" {
+		t.Error("Label incorrect")
+	}
 }
