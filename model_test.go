@@ -1,9 +1,7 @@
 package seq
 
 import "testing"
-import (
-	"fmt"
-)
+import "fmt"
 
 var _ = fmt.Printf
 
