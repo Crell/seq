@@ -28,16 +28,16 @@ func TestExtractParticipants(t *testing.T) {
 	d.addStatement(s1)
 	d.addStatement(s2)
 
-	if d.participants[0] != "A" {
+	if d.Participants[0] != "A" {
 		t.Error("First partipant is wrong.")
 	}
-	if d.participants[1] != "B" {
+	if d.Participants[1] != "B" {
 		t.Error("Second partipant is wrong.")
 	}
-	if d.participants[2] != "C" {
+	if d.Participants[2] != "C" {
 		t.Error("Third partipant is wrong.")
 	}
-	if d.participants[3] != "D" {
+	if d.Participants[3] != "D" {
 		t.Error("Fourth partipant is wrong.")
 	}
 }

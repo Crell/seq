@@ -7,12 +7,12 @@ import (
 var _ = fmt.Printf
 
 type diagram struct {
-	participants []participant
+	Participants []participant
 	statements   []statement
 }
 
 func (d *diagram) addStatement(s *statement) {
-	d.participants = append(d.participants, s.getParticipants()...)
+	d.Participants = append(d.Participants, s.getParticipants()...)
 }
 
 func (s *statement) getParticipants() []participant {
