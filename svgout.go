@@ -9,8 +9,9 @@ var _ = fmt.Printf
 func (d *diagram) makeSvg(out io.Writer) {
 
 	funcMap := template.FuncMap{
-		"participantWidth": participantWidth,
-		"diagramWidth":     diagramWidth,
+		"participantWidth":  participantWidth,
+		"diagramWidth":      diagramWidth,
+		"participantXCoord": participantXCoord,
 	}
 
 	tmpl, err := template.New("svgtemplate.tpl.svg").Funcs(funcMap).ParseFiles("./svgtemplate.tpl.svg")
@@ -27,6 +28,10 @@ func (d *diagram) makeSvg(out io.Writer) {
 
 func participantWidth(p participant) int {
 	return len(p) + 1
+}
+
+func participantXCoord(p participant, i int) int {
+	return i * 10
 }
 
 func diagramWidth(d diagram) int {
