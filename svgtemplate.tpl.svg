@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<svg width="{{ diagramWidth . }}" height="500"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    {{ range $index, $element := .Participants }}
+      <g id="participant-{{ $index }}">
+        <rect x="1" y="1" width="{{ participantWidth . }}em" height="1.5em" fill="transparent" stroke="black" stroke-width="1px" />
+        <text x="1em" y="1em" style="font-size: 1em; text-anchor: middle;">{{ . }}</text>
+      </g>
+    {{ end }}
+  </defs>
+
+  {{ range $index, $element := .Participants }}
+    <use xlink:href="#particpant-{{ $index }}" x="100" y="100" />
+  {{ end }}
+
+
+</svg>
