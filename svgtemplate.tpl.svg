@@ -13,11 +13,9 @@
   </defs>
 
   {{ range $index, $element := .Participants }}
-  <use xlink:href="#participant-{{ $index }}" x="{{ .SvgXCoord $index }}em" y="0" />
-  {{ end }}
-
-  {{ range $index, $element := .Participants }}
-  <use xlink:href="#participant-{{ $index }}" x="{{ .SvgXCoord $index }}em" y="{{ $diagram.SvgParticipantLowerYCoord }}em" />
+    <use xlink:href="#participant-{{ $index }}" x="{{ .SvgXCoord $index }}em" y="0" />
+    <use xlink:href="#participant-{{ $index }}" x="{{ .SvgXCoord $index }}em" y="{{ $diagram.SvgParticipantLowerYCoord }}em" />
+    <line class="participant-line" stroke="black" stroke-width="1px" x1="{{ .SvgSequenceLineXCoord $index }}em" x2="{{ .SvgSequenceLineXCoord $index }}em" y1="0" y2="{{ $diagram.SvgParticipantSequenceLineYEnd }}em" />
   {{ end }}
 
 </svg>

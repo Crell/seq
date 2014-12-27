@@ -30,12 +30,24 @@ func (d *diagram) SvgParticipantLowerYCoord() int {
 	return len(d.statements) * 3
 }
 
+func (d *diagram) SvgParticipantSequenceLineYEnd() int {
+	return len(d.statements) * 3
+}
+
 func (p participant) SvgWidth() int {
 	return len(p) + 1
 }
 
 func (p participant) SvgHeight() float32 {
 	return 1.5
+}
+
+func (p participant) SvgSequenceLineXCoord(index int) int {
+	return index * 7
+}
+
+func (p participant) SvgSequenceLineYStart(index int) int {
+	return 0
 }
 
 func (d *diagram) SvgWidth() int {
