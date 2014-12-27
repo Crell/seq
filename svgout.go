@@ -8,8 +8,7 @@ var _ = fmt.Printf
 
 func (d *diagram) makeSvg(out io.Writer) {
 
-	funcMap := template.FuncMap{
-	}
+	funcMap := template.FuncMap{}
 
 	tmpl, err := template.New("svgtemplate.tpl.svg").Funcs(funcMap).ParseFiles("./svgtemplate.tpl.svg")
 	if err != nil {
