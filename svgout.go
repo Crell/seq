@@ -27,6 +27,18 @@ func (p participant) SvgXCoord(index int) int {
 	return index * 7
 }
 
+func (d *diagram) SvgParticipantLowerYCoord() int {
+	return len(d.statements) * 3
+}
+
+func (p participant) SvgWidth() int {
+	return len(p) + 1
+}
+
+func (p participant) SvgHeight() float32 {
+	return 1.5
+}
+
 func (d *diagram) SvgWidth() int {
 	var width int
 
@@ -40,6 +52,16 @@ func (d *diagram) SvgWidth() int {
 	return width
 }
 
-func (p participant) SvgWidth() int {
-	return len(p) + 1
+func (d *diagram) SvgHeight() float32 {
+	var height float32
+
+	// Each participant appears twice, so count it twice for overall height.
+	for _, p := range d.Participants {
+		height += p.SvgHeight() * 2
+	}
+
+	// Give 2 em of spacing between each participant.
+	//height += len(d.Participants) * 2
+
+	return height
 }
