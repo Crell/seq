@@ -8,8 +8,6 @@ import (
 
 var _ = fmt.Printf
 
-type participant string
-
 // Error definitions
 
 type NotParsableLine struct {
@@ -18,12 +16,6 @@ type NotParsableLine struct {
 
 func (e *NotParsableLine) Error() string {
 	return fmt.Sprintf("Could not parse text: %s", e.text)
-}
-
-type statement struct {
-	from  participant
-	to    participant
-	label string
 }
 
 type ruleParser interface {

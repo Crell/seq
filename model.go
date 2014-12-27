@@ -6,6 +6,14 @@ import (
 
 var _ = fmt.Printf
 
+type participant string
+
+type statement struct {
+	from  participant
+	to    participant
+	label string
+}
+
 type diagram struct {
 	Participants []participant
 	statements   []*statement
