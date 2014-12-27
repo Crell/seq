@@ -8,11 +8,12 @@ var _ = fmt.Printf
 
 type diagram struct {
 	Participants []participant
-	statements   []statement
+	statements   []*statement
 }
 
 func (d *diagram) addStatement(s *statement) {
 	d.Participants = append(d.Participants, s.getParticipants()...)
+	d.statements = append(d.statements, s)
 }
 
 func (s *statement) getParticipants() []participant {
