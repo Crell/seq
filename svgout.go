@@ -38,6 +38,10 @@ func (p participant) SvgWidth() int {
 	return len(p) + 1
 }
 
+func (p participant) SvgXCenter() float32 {
+	return float32(p.SvgWidth()) / 2.0
+}
+
 func (p participant) SvgHeight() float32 {
 	return 1.5
 }
