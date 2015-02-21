@@ -8,7 +8,7 @@ var _ = fmt.Printf
 
 type participant string
 
-type statement struct {
+type Statement struct {
 	from  participant
 	to    participant
 	label string
@@ -16,15 +16,15 @@ type statement struct {
 
 type diagram struct {
 	Participants []participant
-	statements   []*statement
+	statements   []*Statement
 }
 
-func (d *diagram) addStatement(s *statement) {
+func (d *diagram) addStatement(s *Statement) {
 	d.Participants = append(d.Participants, s.getParticipants()...)
 	d.statements = append(d.statements, s)
 }
 
-func (s *statement) getParticipants() []participant {
+func (s *Statement) getParticipants() []participant {
 	participants := make([]participant, 0, 2)
 
 	participants = append(participants, s.from, s.to)

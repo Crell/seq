@@ -19,7 +19,7 @@ func (e *NotParsableLine) Error() string {
 }
 
 type ruleParser interface {
-	action(text string) *statement
+	action(text string) *Statement
 	matches(text string) bool
 }
 
@@ -38,9 +38,9 @@ func NewForwardArrowRule() *forwardArrowRule {
 	return o
 }
 
-func (p *forwardArrowRule) action(text string) *statement {
+func (p *forwardArrowRule) action(text string) *Statement {
 	matches := p.regex.FindStringSubmatch(text)
-	return &statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
+	return &Statement{from: participant(matches[1]), to: participant(matches[2]), label: matches[3]}
 }
 
 func (p *forwardArrowRule) matches(text string) bool {
@@ -57,9 +57,9 @@ func NewBackArrowRule() *backArrowRule {
 	return o
 }
 
-func (p *backArrowRule) action(text string) *statement {
+func (p *backArrowRule) action(text string) *Statement {
 	matches := p.regex.FindStringSubmatch(text)
-	return &statement{from: participant(matches[2]), to: participant(matches[1]), label: matches[3]}
+	return &Statement{from: participant(matches[2]), to: participant(matches[1]), label: matches[3]}
 }
 
 func (p *backArrowRule) matches(text string) bool {
@@ -67,11 +67,11 @@ func (p *backArrowRule) matches(text string) bool {
 }
 
 type Parser struct {
-	out   chan *statement
+	out   chan *Statement
 	rules []ruleParser
 }
 
-func NewParser(out chan *statement) *Parser {
+func NewParser(out chan *Statement) *Parser {
 	p := &Parser{out: out}
 
 	p.addRule(NewForwardArrowRule())
@@ -97,7 +97,7 @@ func (p *Parser) Parse(inStream *bufio.Reader) {
 	}()
 }
 
-func (p *Parser) parseLine(text string) (*statement, error) {
+func (p *Parser) parseLine(text string) (*Statement, error) {
 	for _, rule := range p.rules {
 		if rule.matches(text) {
 			return rule.action(text), nil

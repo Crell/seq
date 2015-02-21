@@ -6,7 +6,7 @@ import "fmt"
 var _ = fmt.Printf
 
 func TestStatementGetParticipants(t *testing.T) {
-	s := &statement{from: participant("A"), to: participant("B"), label: "Label"}
+	s := &Statement{from: participant("A"), to: participant("B"), label: "Label"}
 
 	participants := s.getParticipants()
 
@@ -20,8 +20,8 @@ func TestStatementGetParticipants(t *testing.T) {
 
 func TestExtractParticipants(t *testing.T) {
 
-	s1 := &statement{from: "A", to: "B", label: "Label"}
-	s2 := &statement{from: "C", to: "D", label: "Other"}
+	s1 := &Statement{from: "A", to: "B", label: "Label"}
+	s2 := &Statement{from: "C", to: "D", label: "Other"}
 
 	d := &diagram{}
 

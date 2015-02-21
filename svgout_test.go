@@ -9,8 +9,8 @@ import "fmt"
 var _ = fmt.Printf
 
 func TestSvgWrite(t *testing.T) {
-	s1 := &statement{from: "Alpha", to: "Beta", label: "Label"}
-	s2 := &statement{from: "Gamma", to: "Delta", label: "Other"}
+	s1 := &Statement{from: "Alpha", to: "Beta", label: "Label"}
+	s2 := &Statement{from: "Gamma", to: "Delta", label: "Other"}
 	d := &diagram{}
 	d.addStatement(s1)
 	d.addStatement(s2)
