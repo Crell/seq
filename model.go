@@ -14,6 +14,8 @@ type Statement struct {
 	label string
 }
 
+type StatementFeed chan *Statement
+
 type diagram struct {
 	Participants []participant
 	statements   []*Statement

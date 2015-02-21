@@ -67,11 +67,11 @@ func (p *backArrowRule) matches(text string) bool {
 }
 
 type Parser struct {
-	out   chan *Statement
+	out   StatementFeed
 	rules []ruleParser
 }
 
-func NewParser(out chan *Statement) *Parser {
+func NewParser(out StatementFeed) *Parser {
 	p := &Parser{out: out}
 
 	p.addRule(NewForwardArrowRule())
