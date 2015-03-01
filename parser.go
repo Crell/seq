@@ -106,3 +106,21 @@ func (p *Parser) parseLine(text string) (*Statement, error) {
 
 	return nil, &NotParsableLine{text: text}
 }
+
+func MakeDiagram(inStream *bufio.Reader) *diagram {
+	// Setup the output channel
+	statements := make(StatementFeed)
+
+	diagram := &diagram{}
+
+	go func() {
+		for stmt := range statements {
+			diagram.addStatement(stmt)
+		}
+	}()
+
+	p := NewParser(statements)
+	p.Parse(inStream)
+
+	return diagram
+}
