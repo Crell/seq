@@ -26,5 +26,5 @@ func TestSvgWrite(t *testing.T) {
 		}
 	}()
 
-	d.makeSvg(fo)
+	d.MakeSvg(fo)
 }

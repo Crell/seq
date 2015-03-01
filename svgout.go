@@ -6,7 +6,7 @@ import "text/template"
 
 var _ = fmt.Printf
 
-func (d *diagram) makeSvg(out io.Writer) {
+func (d *diagram) MakeSvg(out io.Writer) {
 
 	funcMap := template.FuncMap{}
 
