@@ -4,7 +4,9 @@ package seq
 
 import (
 	"fmt"
+	"io"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -36,30 +38,23 @@ func (t token) String() string {
 	return fmt.Sprintf("%q", t.val)
 }
 
-type lexer struct {
-	start  int
-	pos    int
-	width  int
-	input  string
-	tokens chan token
-}
+// Tokenizer class
 
 type stateFunction func(*lexer) stateFunction
 
 type tokenMap map[tokenType]stateFunction
 
 type tokenizer struct {
-	tokens tokenMap
 }
 
-func (t *tokenizer) addToken(name tokenType, fn stateFunction) {
-	t.tokens[name] = fn
-}
+// Lexer class
 
-func (t *tokenizer) run(start token) {
-	for state := start; state != nil; {
-		state = t.tokens[state](lexer)
-	}
+type lexer struct {
+	start  int
+	pos    int
+	width  int
+	input  string
+	tokens chan token
 }
 
 func lex(input string) (*lexer, chan token) {
@@ -76,6 +71,7 @@ func (lexer *lexer) run() {
 	for state := tokenParticipant; state != nil; {
 		state = state(lexer)
 	}
+	close(lexer.tokens)
 }
 
 func (lexer *lexer) emit(t tokenType) {
@@ -89,7 +85,7 @@ func (lexer *lexer) emit(t tokenType) {
 func (lexer *lexer) next() (rune int) {
 	if lexer.pos >= len(lexer.input) {
 		lexer.width = 0
-		return eof
+		return io.EOF
 	}
 	rune, lexer.width = utf8.DecodeRuneInString(lexer.input[lexer.pos:])
 	lexer.pos += lexer.width
@@ -101,9 +97,9 @@ func (lexer *lexer) ignore() {
 }
 
 func (lexer *lexer) peek() int {
-	rune := lexer.next()
+	r := lexer.next()
 	lexer.backup()
-	return rune
+	return r
 }
 
 // accept consumes the next rune if it's from the valid set. The "valid" string is
@@ -139,6 +135,8 @@ func (lexer *lexer) errorf(format string, args ...interface{}) stateFunction {
 	return nil
 }
 
+// States
+
 func lexParticipant(lexer *lexer) tokenType {
 	for {
 		if strings.HasPrefix(lexer.input[lexer.pos:], arrow) {
@@ -147,7 +145,7 @@ func lexParticipant(lexer *lexer) tokenType {
 			}
 			return tokenArrow
 		}
-		if lexer.next() == eof {
+		if lexer.next() == io.EOF {
 			break
 		}
 	}
@@ -163,10 +161,14 @@ func lexArrow(lexer *lexer) tokenType {
 
 func beginStatement(lexer *lexer) tokenType {
 	// Where is the isAlpha defined? It's in the slides...
-	if isAlpha(lexer.peek()) {
+	if isAlphaNumeric(lexer.peek()) {
 		lexer.emit(tokenBeginStatement)
 		return tokenParticipant
 	}
 	lexer.errorf("Participant names must begin with a letter.")
 	return nil
+}
+
+func isAlphaNumeric(r rune) bool {
+	return r == '_' || unicode.IsLetter(r) || unicode.IsDigit(r)
 }
